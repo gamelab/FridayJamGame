@@ -15,7 +15,7 @@ FridayGameJam.Intro.create = function () {
 	this.addChild(this.background);
 
 	//GameTitle
-	this.gameTitle = new Kiwi.GameObjects.Textfield(this, 'KiwiJuicerz'.toUpperCase(), this.game.stage.width * 0.5, 80, '#fff', 40, 'bold');
+	this.gameTitle = new Kiwi.GameObjects.Textfield(this, 'Absolution velocity'.toUpperCase(), this.game.stage.width * 0.5, 80, '#fff', 40, 'bold');
 	this.gameTitle.textAlign = 'center';
 	this.addChild(this.gameTitle);
 
@@ -32,8 +32,7 @@ FridayGameJam.Intro.create = function () {
 
 FridayGameJam.Intro.startGame = function() {
 
-	console.log('starting');
-
+	this.game.stage.container.style.cursor = 'pointer';
 	this.game.states.switchState('Play', null, null, { level: 0 } );
 
 }
