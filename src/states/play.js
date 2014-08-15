@@ -5,21 +5,24 @@ FridayGameJam.Play = new Kiwi.State('Play');
 
 FridayGameJam.Play.create = function() {
 
-  this.player = new FridayGameJam.Managers.Player(this);
+  	this.player = new FridayGameJam.Managers.Player(this);
+  	this.ai = new FridayGameJam.Managers.AI(this, 0);
+ 	  this.hud = new FridayGameJam.Managers.HUD(this, this.ai, this.player);
 
-  this.ai = new FridayGameJam.Managers.AI(this, 0);
+    this.level = new FridayGameJam.GameObjects.Level( this, this.textures.background, 0,0 );
+    this.addChild( this.level );
 
-  this.level = new FridayGameJam.GameObjects.Level( this, this.textures.background, 0,0 );
-  this.addChild( this.level );
+    this.ballGroup = new Kiwi.Group( this );
+    this.depthRect = new Kiwi.GameObjects.StaticImage(this, this.textures["depth-rect"], this.level.gameArea.left, this.level.gameArea.top );
+    this.ball = new FridayGameJam.GameObjects.Ball( this, this.textures.ball, this.game.stage.width / 2 - 23, this.game.stage.height / 2 - 23, this.level.gameDepth.front, this.level );
 
-  // Create a scaling group for variable Z-depth objects
-  this.ballGroup = new Kiwi.Group( this );
-  this.addChild( this.ballGroup );
-  this.depthRect = new Kiwi.GameObjects.StaticImage(this, this.textures["depth-rect"], this.level.gameArea.left, this.level.gameArea.top );
-  this.ballGroup.addChild( this.depthRect );
 
-  this.ball = new FridayGameJam.GameObjects.Ball( this, this.textures.ball, this.game.stage.width / 2 - 23, this.game.stage.height / 2 - 23, this.level.gameDepth.front, this.level );
-  this.ballGroup.addChild( this.ball );
+    this.ai.addToStage();
+    this.addChild( this.ballGroup );
+    this.ballGroup.addChild( this.depthRect );
+    this.ballGroup.addChild( this.ball );
+    this.player.addToStage();
+    this.hud.addToStage();
 }
 
 
@@ -29,7 +32,7 @@ FridayGameJam.Play.update = function () {
   //Super method update loop
   Kiwi.State.prototype.update.call( this );
 
-  // Player controls
+  this.hud.update();
 
   // AI controls
 
@@ -44,4 +47,8 @@ FridayGameJam.Play.update = function () {
   this.ballGroup.y = (this.game.stage.height / 2) * (1 - scaleFactor);
 }
 
+
+FridayGameJam.Play.shutDown = function() {
+	this.game.stage.container.style.cursor = '';
+}
 
