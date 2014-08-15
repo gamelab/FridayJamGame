@@ -7,19 +7,22 @@ FridayGameJam.Play.create = function() {
 
   	this.player = new FridayGameJam.Managers.Player(this);
   	this.ai = new FridayGameJam.Managers.AI(this, 0);
- 	this.hud = new FridayGameJam.Managers.HUD(this, this.ai, this.player);
+ 	  this.hud = new FridayGameJam.Managers.HUD(this, this.ai, this.player);
 
-  this.level = new FridayGameJam.GameObjects.Level( this, this.textures.background, 0,0 );
-  this.addChild( this.level );
+    this.level = new FridayGameJam.GameObjects.Level( this, this.textures.background, 0,0 );
+    this.addChild( this.level );
 
-  	this.player.addToStage();
-  	this.ai.addToStage();
-  	this.hud.addToStage();
-  this.depthRect = new Kiwi.GameObjects.StaticImage(this, this.textures["depth-rect"], this.level.gameArea.left, this.level.gameArea.top );
-  this.ballGroup.addChild( this.depthRect );
+    this.ballGroup = new Kiwi.Group( this );
+    this.depthRect = new Kiwi.GameObjects.StaticImage(this, this.textures["depth-rect"], this.level.gameArea.left, this.level.gameArea.top );
+    this.ball = new FridayGameJam.GameObjects.Ball( this, this.textures.ball, this.game.stage.width / 2 - 23, this.game.stage.height / 2 - 23, this.level.gameDepth.front, this.level );
 
-  this.ball = new FridayGameJam.GameObjects.Ball( this, this.textures.ball, this.game.stage.width / 2 - 23, this.game.stage.height / 2 - 23, this.level.gameDepth.front, this.level );
-  this.ballGroup.addChild( this.ball );
+
+    this.ai.addToStage();
+    this.addChild( this.ballGroup );
+    this.ballGroup.addChild( this.depthRect );
+    this.ballGroup.addChild( this.ball );
+    this.player.addToStage();
+    this.hud.addToStage();
 }
 
 
