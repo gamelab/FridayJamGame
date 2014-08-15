@@ -25,12 +25,12 @@ FridayGameJam.GameObjects.Ball.prototype.update = function( player, ai ) {
 	// Requires knowledge of player and ai paddle positions
 
 	// Acceleration and velocity
-	this.velocity.x += this.acceleration.x;
-	this.velocity.y += this.acceleration.y;
+	this.velocity.x += this.acceleration.x * this.state.game.time.rate;
+	this.velocity.y += this.acceleration.y * this.state.game.time.rate;
 	// this.velocity.z stays the same
-	this.x += this.velocity.x;
-	this.y += this.velocity.y;
-	this.z += this.velocity.z;
+	this.x += this.velocity.x * this.state.game.time.rate;
+	this.y += this.velocity.y * this.state.game.time.rate;
+	this.z += this.velocity.z * this.state.game.time.rate;
 
 	// Test for edge collision
 	this.collideEdges();
