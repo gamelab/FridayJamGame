@@ -36,22 +36,34 @@ FridayGameJam.GameObjects.Ball.prototype.update = function( player, ai ) {
 	this.collideEdges();
 
 	// Test for paddle collision and victory conditions
+	this.collidePlayers( player, ai );
 }
 
 FridayGameJam.GameObjects.Ball.prototype.collideEdges = function() {
 	// 2D edge collision, very simple
 
-	if( this.x <= this.level.gameArea.left + this.radius ) {
+	if( this.x <= this.level.gameArea.left ) {
 		this.velocity.x = Math.abs(this.velocity.x * this.restitution);
 	}
-	else if( this.level.gameArea.right - this.radius <= this.x ) {
+	else if( this.level.gameArea.right - this.radius * 2 <= this.x ) {
 		this.velocity.x = -Math.abs(this.velocity.x * this.restitution);
 	}
 
-	if( this.y <= this.level.gameArea.top + this.radius ) {
+	if( this.y <= this.level.gameArea.top ) {
 		this.velocity.y = Math.abs(this.velocity.y * this.restitution);
 	}
-	else if( this.level.gameArea.bottom - this.radius <= this.y ) {
+	else if( this.level.gameArea.bottom - this.radius * 2 <= this.y ) {
 		this.velocity.y = -Math.abs(this.velocity.y * this.restitution);
+	}
+}
+
+FridayGameJam.GameObjects.Ball.prototype.collidePlayers = function(player, ai) {
+	// Temporary function for Z-depth bouncing
+
+	if( this.z <= this.level.gameDepth.front ) {
+		this.velocity.z = Math.abs( this.velocity.z * this.restitution );
+	}
+	else if( this.level.gameDepth.back - this.radius * 2 <= this.z ) {
+		this.velocity.z = -Math.abs(this.velocity.z * this.restitution);
 	}
 }
