@@ -12,5 +12,9 @@ FridayGameJam.Intro = new Kiwi.State('Intro');
 
 
 FridayGameJam.Intro.create = function () {
+    	
+
     game.states.switchState("Play");
+
+
 }
