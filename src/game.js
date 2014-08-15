@@ -10,7 +10,7 @@
 //Initialise the Kiwi Game. 
 
 var gameOptions = {
-	renderer: Kiwi.RENDERER_CANVAS, 
+	renderer: Kiwi.RENDERER_AUTO, 
 	width: 540,
 	height: 410,
 	deviceTarget: Kiwi.TARGET_BROWSER
