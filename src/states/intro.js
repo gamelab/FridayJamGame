@@ -2,19 +2,38 @@ var FridayGameJam = FridayGameJam || {};
 
 FridayGameJam.Intro = new Kiwi.State('Intro');
 
-/**
-* The IntroState is the state which would manage any main-menu functionality for your game.
-* Generally this State would switch to other sub 'states' which would handle the individual features. 
-*  
-* Right now we are just switching straight to the PlayState.
-*
-*/
 
 
 FridayGameJam.Intro.create = function () {
-    	
+	
+	//Black Background    
+	this.game.stage.color = '000000';
+	this.game.stage.resize( this.game.stage.width, this.game.stage.height ); //HACK
 
-    game.states.switchState("Play");
+	//Background
+	this.background = new Kiwi.GameObjects.StaticImage(this, this.textures['background'], 0, 0);
+	this.addChild(this.background);
 
+	//GameTitle
+	this.gameTitle = new Kiwi.GameObjects.Textfield(this, 'KiwiJuicerz'.toUpperCase(), this.game.stage.width * 0.5, 80, '#fff', 40, 'bold');
+	this.gameTitle.textAlign = 'center';
+	this.addChild(this.gameTitle);
+
+	//Buttons
+	this.button = new Kiwi.GameObjects.Sprite(this, this.textures['start-game-button'], 0, 0, true);
+	this.button.x = this.game.stage.width * 0.5 - this.button.width * 0.5;
+	this.button.y = this.game.stage.height * 0.5;
+	this.addChild(this.button);
+
+
+	this.button.input.onUp.add( this.startGame, this );
+
+}
+
+FridayGameJam.Intro.startGame = function() {
+
+	console.log('starting');
+
+	this.game.states.switchState('Play', null, null, { level: 0 } );
 
 }

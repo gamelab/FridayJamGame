@@ -16,4 +16,8 @@ FridayGameJam.Loading.preload = function () {
 
     this.addSpriteSheet('ball-hud', './assets/img/game/balls-hud.png', 8, 8);
 
+
+    //Button
+    this.addImage('start-game-button', './assets/img/buttons/start-game-button.png');
+
 };
