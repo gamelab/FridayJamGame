@@ -14,7 +14,7 @@ FridayGameJam.Play.create = function() {
 
     this.ballGroup = new Kiwi.Group( this );
     this.depthRect = new Kiwi.GameObjects.StaticImage(this, this.textures["depth-rect"], this.level.gameArea.left, this.level.gameArea.top );
-    this.ball = new FridayGameJam.GameObjects.Ball( this, this.textures.ball, this.game.stage.width / 2 - 23, this.game.stage.height / 2 - 23, this.level.gameDepth.front, this.level );
+    this.ball = new FridayGameJam.GameObjects.Ball( this, this.textures.ball, this.game.stage.width / 2 - 23, this.game.stage.height / 2 - 23, this.level.gameDepth.front + (this.level.gameDepth.back - this.level.gameDepth.front) / 2, this.level );
 
 
     this.ai.addToStage();
@@ -35,10 +35,11 @@ FridayGameJam.Play.update = function () {
   this.hud.update();
 
   // AI controls
+  this.ai.run();
 
   // Ball physics
   //this.ball.acceleration.x = 0.1 * Math.sin(this.game.idealFrame * 0.01);	// Test delta vee
-  this.ball.update( this.player, this.ai );
+  this.ball.run( this.player, this.ai );
 
   // Scaling group control
   var scaleFactor = this.level.gameDepth.front / this.ball.z;

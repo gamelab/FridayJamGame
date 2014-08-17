@@ -17,6 +17,11 @@ FridayGameJam.Managers.AI = function(state, level) {
 
 }
 
+FridayGameJam.Managers.AI.prototype.run = function() {
+	// Follow state ball position
+	this.aiPos.setTo( this.state.ball.x, this.state.ball.y );
+}
+
 FridayGameJam.Managers.AI.prototype.increaseDifficulty = function() {
 	this.level++;
 }
@@ -27,5 +32,12 @@ FridayGameJam.Managers.AI.prototype.restart = function() {
 
 
 FridayGameJam.Managers.AI.prototype.addToStage = function() {
-	this.state.addChild( this.paddle );	
+	// Set up a proper scale group
+	this.scaleGroup = new Kiwi.Group(this.state);
+	this.scaleGroup.addChild( this.paddle );
+	var scaleFactor = this.state.level.gameDepth.front / this.state.level.gameDepth.back;
+	this.scaleGroup.scale = scaleFactor;
+	this.scaleGroup.x = (this.state.game.stage.width / 2) * (1 - scaleFactor);
+  	this.scaleGroup.y = (this.state.game.stage.height / 2) * (1 - scaleFactor);
+	this.state.addChild( this.scaleGroup );	
 }
