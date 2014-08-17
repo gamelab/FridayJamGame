@@ -41,6 +41,7 @@ FridayGameJam.Play.update = function () {
   //this.ball.acceleration.x = 0.1 * Math.sin(this.game.idealFrame * 0.01);	// Test delta vee
   this.ball.run( this.player, this.ai );
 
+
   // Scaling group control
   var scaleFactor = this.level.gameDepth.front / this.ball.z;
   this.ballGroup.scale = scaleFactor;
