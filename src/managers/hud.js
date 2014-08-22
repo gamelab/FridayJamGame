@@ -31,6 +31,10 @@ FridayGameJam.Managers.HUD = function(state, ai, player) {
 
 }
 
+FridayGameJam.Managers.HUD.prototype.increaseScore = function(amount) {
+	this.score += Math.abs(amount);
+}
+
 FridayGameJam.Managers.HUD.prototype.generateBalls = function() {
 
 	var len = this.player.lives; 
@@ -75,10 +79,12 @@ FridayGameJam.Managers.HUD.prototype.matchAiLives = function() {
 
 	} else if(aiLives < this.aiLiveBalls.length) {
 		//Delete lives
-		var diffLen = this.aiLiveBalls.length - aiLives;
-		while(diffLen--) {
-			this.aiLiveBalls[this.aiLiveBalls.length - diffLen - 1].delete();
-			this.aiLiveBalls.splice(this.aiLiveBalls.length - diffLen - 1, 1);
+		if(aiLives >= 0) {
+			var diffLen = this.aiLiveBalls.length - aiLives;
+			while(diffLen--) {
+				this.aiLiveBalls[this.aiLiveBalls.length - diffLen - 1].delete();
+				this.aiLiveBalls.splice(this.aiLiveBalls.length - diffLen - 1, 1);
+			}
 		}
 	}
 
@@ -97,10 +103,12 @@ FridayGameJam.Managers.HUD.prototype.matchPlayerLives = function() {
 
 	} else if(playerLives < this.playerLiveBalls.length) {
 		//Delete lives
-		var diffLen = this.playerLiveBalls.length - playerLives;
-		while(diffLen--) {
-			this.playerLiveBalls[this.playerLiveBalls.length - diffLen - 1].delete();
-			this.playerLiveBalls.splice(this.playerLiveBalls.length - diffLen - 1, 1);
+		if(playerLives >= 0) {
+			var diffLen = this.playerLiveBalls.length - playerLives;
+			while(diffLen--) {
+				this.playerLiveBalls[this.playerLiveBalls.length - diffLen - 1].delete();
+				this.playerLiveBalls.splice(this.playerLiveBalls.length - diffLen - 1, 1);
+			}
 		}
 	}
 

@@ -23,6 +23,13 @@ FridayGameJam.GameObjects.Paddle.prototype.follow = function( point ) {
 
 }
 
+FridayGameJam.GameObjects.Paddle.prototype.stopFollow = function( ) {
+
+	this._following = false;
+	this._followPoint = null;
+
+}
+
 
 FridayGameJam.GameObjects.Paddle.prototype.update = function() {
 
