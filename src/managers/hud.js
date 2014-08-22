@@ -9,8 +9,8 @@ FridayGameJam.Managers.HUD = function(state, ai, player) {
 
 	this.score = 0;
 
-	this.scoreText = new Kiwi.GameObjects.Textfield(this.state, 'Score: ' + this.score, 80, 60, '#09c', 14, 'bold' );
-	this.levelText = new Kiwi.GameObjects.Textfield(this.state, 'Level: ' + this.ai.level, this.game.stage.width - 80, 60, '#09c', 14, 'bold' );
+	this.scoreText = new Kiwi.GameObjects.Textfield(this.state, 'Score: ' + this.score, 40, 30, '#fff', 14, 'bold', 'Orbitron' );
+	this.levelText = new Kiwi.GameObjects.Textfield(this.state, 'Level: ' + this.ai.level, this.game.stage.width - 40, 30, '#fff', 14, 'bold', 'Orbitron' );
 
 	this.levelText.textAlign = 'right';
 
@@ -18,17 +18,21 @@ FridayGameJam.Managers.HUD = function(state, ai, player) {
 	this.aiLiveBalls = [];
 
 	this.playerBallsGroup = new Kiwi.Group( this.state );
-	this.playerBallsGroup.x = 80;
-	this.playerBallsGroup.y = 60 + 16;
+	this.playerBallsGroup.x = 35;
+	this.playerBallsGroup.y = this.game.stage.height - 46;
 
 	this.aiBallsGroup = new Kiwi.Group( this.state );
-	this.aiBallsGroup.x = this.game.stage.width - 80;
-	this.aiBallsGroup.y = 60 + 16;
+	this.aiBallsGroup.x = this.game.stage.width - 35;
+	this.aiBallsGroup.y = this.game.stage.height - 46;
 	this.aiBallsGroup.scaleX = -1;
 
 
 	this.generateBalls();
 
+}
+
+FridayGameJam.Managers.HUD.prototype.increaseScore = function(amount) {
+	this.score += Math.abs(amount);
 }
 
 FridayGameJam.Managers.HUD.prototype.generateBalls = function() {
@@ -46,9 +50,8 @@ FridayGameJam.Managers.HUD.prototype.generateBalls = function() {
 
 }
 
-
 FridayGameJam.Managers.HUD.prototype.createPlayerBall = function() {
-	var staticBall = new Kiwi.GameObjects.StaticImage(this.state, this.state.textures['ball-hud'], 0, 0);
+	var staticBall = new FridayGameJam.GameObjects.Live(this.state);
 	staticBall.cellIndex = 1;
 	staticBall.x = staticBall.width * this.playerLiveBalls.length;
 	this.playerLiveBalls.push(staticBall);
@@ -56,10 +59,59 @@ FridayGameJam.Managers.HUD.prototype.createPlayerBall = function() {
 }
 
 FridayGameJam.Managers.HUD.prototype.createAIBall = function() {
-	var staticBall = new Kiwi.GameObjects.StaticImage(this.state, this.state.textures['ball-hud'], 0, 0);
+	var staticBall = new FridayGameJam.GameObjects.Live(this.state);
 	staticBall.x = (staticBall.width * this.aiLiveBalls.length);
 	this.aiLiveBalls.push(staticBall);
 	this.aiBallsGroup.addChild(staticBall); 
+}
+
+
+FridayGameJam.Managers.HUD.prototype.matchAiLives = function() {
+
+	var aiLives = this.ai.lives;
+
+	if(aiLives > this.aiLiveBalls.length) {
+		//Create more balls
+		var diffLen = aiLives - this.aiLiveBalls.length;
+		while(diffLen--) {
+			this.createAIBall();
+		}
+
+	} else if(aiLives < this.aiLiveBalls.length) {
+		//Delete lives
+		if(aiLives >= 0) {
+			var diffLen = this.aiLiveBalls.length - aiLives;
+			while(diffLen--) {
+				this.aiLiveBalls[this.aiLiveBalls.length - diffLen - 1].delete();
+				this.aiLiveBalls.splice(this.aiLiveBalls.length - diffLen - 1, 1);
+			}
+		}
+	}
+
+}
+
+FridayGameJam.Managers.HUD.prototype.matchPlayerLives = function() {
+
+	var playerLives = this.player.lives;
+
+	if(playerLives > this.playerLiveBalls.length) {
+		//Create more balls
+		var diffLen = playerLives - this.playerLiveBalls.length ;
+		while(diffLen--) {
+			this.createPlayerBall();
+		}
+
+	} else if(playerLives < this.playerLiveBalls.length) {
+		//Delete lives
+		if(playerLives >= 0) {
+			var diffLen = this.playerLiveBalls.length - playerLives;
+			while(diffLen--) {
+				this.playerLiveBalls[this.playerLiveBalls.length - diffLen - 1].delete();
+				this.playerLiveBalls.splice(this.playerLiveBalls.length - diffLen - 1, 1);
+			}
+		}
+	}
+
 }
 
 FridayGameJam.Managers.HUD.prototype.addToStage = function() {
@@ -76,7 +128,13 @@ FridayGameJam.Managers.HUD.prototype.update = function() {
 	this.scoreText.text = 'SCORE: ' + this.score;
 	this.levelText.text = 'LEVEL: ' + this.ai.level;
 
+	//Check the lives 
+	if(this.ai.lives !== this.aiLiveBalls.length) {
+		this.matchAiLives();
+	} 
 
-
+	if(this.player.lives !== this.playerLiveBalls.length) {
+		this.matchPlayerLives();
+	}
 
 }

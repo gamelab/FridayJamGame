@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <title>FridayGameJam</title>
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css" />
 </head>
 <body>
 
@@ -10,8 +11,17 @@
 		Container where our Game will be nested inside. 
 		Note: This element is not used in the event that you are targetting CocoonJS.
 	-->
-    <div id="content" style="margin: 0 auto;"></div>
+    <div id="container">
+        <div id="content"></div>
 
+        <!--
+        <p>Absolution Velocity is an HTML 5 remake of a game called <a href="http://www.albinoblacksheep.com/games/curveball" target="_blank">Curveball.</a></p>
+
+        <h1>Get Involved</h1>
+        <p>If you liked the game and want to help us further develop it, or if you like to view the code for it, then view the game on <a href="https://github.com/gamelab/FridayJamGame" target="_blank">github</a>.</p>
+        -->
+
+    </div>
 
     <!-- Libraries -->
     <script src="lib/kiwi.js"></script>
@@ -23,6 +33,7 @@
     <script src="src/gameobjects/paddle.js"></script>
     <script src="src/gameobjects/ball.js"></script>
     <script src="src/gameobjects/level.js"></script>
+    <script src="src/gameobjects/live.js"></script>
 
 
     <!-- Managers -->

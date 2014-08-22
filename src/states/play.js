@@ -24,12 +24,36 @@ FridayGameJam.Play.create = function() {
     this.ball = new FridayGameJam.GameObjects.Ball( this, this.textures.ball, this.game.stage.width / 2 - 23, this.game.stage.height / 2 - 23, this.level.gameDepth.front + (this.level.gameDepth.back - this.level.gameDepth.front) / 2, this.level );
 
 
+
+
     this.ai.addToStage();
     this.ball.addProps( this ); // The ball comes with certain associated props; this registers them
     this.player.addToStage();
     this.hud.addToStage();
 }
 
+
+
+FridayGameJam.Play.playerGameover = function() {
+
+  //Stop the player
+  this.player.stopFollowingMouse();
+
+  //GameOver Man, Gameover
+  this.gameoverTitle = new Kiwi.GameObjects.StaticImage(this, this.textures['gameover'], 0, 2);
+  this.gameoverTitle.x = this.game.stage.width * 0.5 - this.gameoverTitle.width * 0.5;
+  this.addChild( this.gameoverTitle );
+
+  this.tryAgainButton = new Kiwi.GameObjects.Sprite(this, this.textures['try-again-button'], 0, 10);
+  this.tryAgainButton.x = this.game.stage.width * 0.5 - this.tryAgainButton.width * 0.5;
+  this.tryAgainButton.y = 258;
+  this.addChild(this.tryAgainButton);
+
+  this.tryAgainButton.input.onUp.add( function() {
+    this.game.states.switchState('Intro');
+  }, this );
+
+}
 
 
 FridayGameJam.Play.update = function () { 

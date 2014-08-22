@@ -11,7 +11,6 @@ FridayGameJam.Managers.Player = function(state) {
 
 	//Input
 	this.startDrag();
-	this.hideCursor();
 
 }
 
@@ -21,8 +20,24 @@ FridayGameJam.Managers.Player.prototype.addToStage = function() {
 
 FridayGameJam.Managers.Player.prototype.startDrag = function() {
 	this.paddle.follow( this.game.input.mouse );
+	this.game.stage.container.style.cursor = 'none';
 }
 
-FridayGameJam.Managers.Player.prototype.hideCursor = function() {
-	this.game.stage.container.style.cursor = 'none';
+FridayGameJam.Managers.Player.prototype.stopFollowingMouse = function() {
+	this.paddle.stopFollow( );
+	this.game.stage.container.style.cursor = '';
+}
+
+FridayGameJam.Managers.Player.prototype.loseLife = function() {
+	this.lives--;
+
+	if(this.lives < 0) {
+		this.state.playerGameover();
+	}
+}
+
+
+FridayGameJam.Managers.Player.prototype.gainLife = function(amount) {
+	var amount = amount || 1;
+	this.lives += Math.abs(amount);
 }
