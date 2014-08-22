@@ -12,8 +12,8 @@ FridayGameJam.Loading.preload = function () {
 
     //In Game
     this.addSpriteSheet('ball', './assets/img/game/ball.png', 124, 125);
-    this.addSpriteSheet('blue-paddle', './assets/img/game/blue-paddle.png', 92, 62);
-    this.addSpriteSheet('red-paddle', './assets/img/game/red-paddle.png', 92, 62);
+    this.addSpriteSheet('blue-paddle', './assets/img/game/light-blue-paddle.png', 92, 62);
+    this.addSpriteSheet('red-paddle', './assets/img/game/orange-paddle.png', 92, 62);
     this.addSpriteSheet('ball-hud', './assets/img/game/balls-hud.png', 8, 8);
 
     //Start Screen
