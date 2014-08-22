@@ -1,7 +1,5 @@
 
-@font-face { font-family: 'Orbitron'; src: url('assets/fonts/Orbitron-Regular.ttf'); }
 @font-face { font-family: 'Venus-Rising-RG'; src: url('assets/fonts/Venus-Rising-RG.ttf'); }
-@font-face { font-family: 'Yellowtail-Regular'; src: url('assets/fonts/Yellowtail-Regular.ttf'); }
 
 body, html {
 	background: #000;

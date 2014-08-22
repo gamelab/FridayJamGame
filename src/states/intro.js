@@ -11,8 +11,15 @@ FridayGameJam.Intro.create = function () {
 	this.game.stage.resize( this.game.stage.width, this.game.stage.height ); //HACK
 
 	//Background
-	this.background = new Kiwi.GameObjects.StaticImage(this, this.textures['background'], 0, 0);
-	this.addChild(this.background);
+	this.level = new FridayGameJam.GameObjects.Level( this, this.textures.background, 0,0 );
+    this.addChild( this.level );
+	// Create pulsar field
+    this.game.renderer.addSharedRendererClone( "TextureAtlasRenderer", "AdditiveTAR" );
+    this.additiveRenderer = this.game.renderer.requestSharedRenderer("AdditiveTAR");
+    this.additiveRenderer.blendMode.setMode("ADD");
+    this.levelPulse = new Kiwi.GameObjects.Sprite( this, this.textures.background, 0,0 );
+    this.levelPulse.glRenderer = this.additiveRenderer;
+    this.addChild(this.levelPulse);
 
 	//HTML Remake
 	this.remake = new Kiwi.GameObjects.StaticImage(this, this.textures['html-remake'], 0, 0);
@@ -41,6 +48,13 @@ FridayGameJam.Intro.create = function () {
 	this.startButton.input.onUp.add( this.startGame, this );
 	this.highButton.input.onUp.add( this.hiScores, this );
 
+}
+
+FridayGameJam.Intro.update = function() {
+	Kiwi.State.prototype.update.call( this );
+
+	this.level.run();
+    this.levelPulse.alpha = this.level.glow;
 }
 
 FridayGameJam.Intro.startGame = function() {

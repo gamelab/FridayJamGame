@@ -21,21 +21,39 @@ FridayGameJam.Play.create = function() {
     this.addChild(this.levelPulse);
 
     // Ball and perspective
-    this.ballGroup = new Kiwi.Group( this );
-    this.ballGroup.anchorPointX = this.game.stage.width / 2;
-    this.ballGroup.anchorPointY = this.game.stage.height / 2;
-    this.depthRect = new Kiwi.GameObjects.StaticImage(this, this.textures["depth-rect"], this.level.gameArea.left, this.level.gameArea.top );
     this.ball = new FridayGameJam.GameObjects.Ball( this, this.textures.ball, this.game.stage.width / 2 - 23, this.game.stage.height / 2 - 23, this.level.gameDepth.front + (this.level.gameDepth.back - this.level.gameDepth.front) / 2, this.level );
 
 
+
+
     this.ai.addToStage();
-    this.addChild( this.ballGroup );
-    this.ballGroup.addChild( this.depthRect );
-    this.ballGroup.addChild( this.ball );
+    this.ball.addProps( this ); // The ball comes with certain associated props; this registers them
     this.player.addToStage();
     this.hud.addToStage();
 }
 
+
+
+FridayGameJam.Play.playerGameover = function() {
+
+  //Stop the player
+  this.player.stopFollowingMouse();
+
+  //GameOver Man, Gameover
+  this.gameoverTitle = new Kiwi.GameObjects.StaticImage(this, this.textures['gameover'], 0, 2);
+  this.gameoverTitle.x = this.game.stage.width * 0.5 - this.gameoverTitle.width * 0.5;
+  this.addChild( this.gameoverTitle );
+
+  this.tryAgainButton = new Kiwi.GameObjects.Sprite(this, this.textures['try-again-button'], 0, 10);
+  this.tryAgainButton.x = this.game.stage.width * 0.5 - this.tryAgainButton.width * 0.5;
+  this.tryAgainButton.y = 258;
+  this.addChild(this.tryAgainButton);
+
+  this.tryAgainButton.input.onUp.add( function() {
+    this.game.states.switchState('Intro');
+  }, this );
+
+}
 
 
 FridayGameJam.Play.update = function () { 
@@ -51,10 +69,6 @@ FridayGameJam.Play.update = function () {
   // Ball physics
   //this.ball.acceleration.x = 0.1 * Math.sin(this.game.idealFrame * 0.01);	// Test delta vee
   this.ball.run( this.player, this.ai );
-
-
-  // Scaling group control
-  this.ballGroup.scale = this.level.gameDepth.front / this.ball.z;
 
   // Cosmetic animation
   this.level.run();

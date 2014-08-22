@@ -18,7 +18,7 @@ Kiwi.extend( FridayGameJam.GameObjects.Level, Kiwi.GameObjects.Sprite );
 
 FridayGameJam.GameObjects.Level.prototype.run = function() {
 	// Decay flicker
-	this.flicker *= 0.95;
+	this.flicker *= 0.90;
 	if(this.flicker < 0) {
 		this.flicker = 0;
 	}
