@@ -6,6 +6,7 @@ FridayGameJam.GameObjects.Ball = function(state, texture, x, y, z, level) {
 
 	// Register level
 	this.level = level;
+	this.animation.add('pulse', [3,2,1,0], 0.1, false);
 
 	// Init depth value to manage fake 3D
 	this.z = z;
@@ -51,19 +52,23 @@ FridayGameJam.GameObjects.Ball.prototype.collideEdges = function() {
 	if( this.x <= this.level.gameArea.left ) {
 		this.x = this.level.gameArea.left;
 		this.velocity.x = Math.abs(this.velocity.x * this.restitution);
+		this.animation.play('pulse', true);
 	}
 	else if( this.level.gameArea.right - this.radius * 2 <= this.x ) {
 		this.x = this.level.gameArea.right - this.radius * 2;
 		this.velocity.x = -Math.abs(this.velocity.x * this.restitution);
+		this.animation.play('pulse', true);
 	}
 
 	if( this.y <= this.level.gameArea.top ) {
 		this.y = this.level.gameArea.top;
 		this.velocity.y = Math.abs(this.velocity.y * this.restitution);
+		this.animation.play('pulse', true);
 	}
 	else if( this.level.gameArea.bottom - this.radius * 2 <= this.y ) {
 		this.y = this.level.gameArea.bottom - this.radius * 2;
 		this.velocity.y = -Math.abs(this.velocity.y * this.restitution);
+		this.animation.play('pulse', true);
 	}
 }
 
@@ -75,6 +80,7 @@ FridayGameJam.GameObjects.Ball.prototype.collidePlayers = function(player1, play
 			this.velocity.z = Math.abs( this.velocity.z * this.restitution );
 			this.acceleration.x = player1.paddle.velocity.x * this.curviness;
 			this.acceleration.y = player1.paddle.velocity.y * this.curviness;
+			this.animation.play('pulse', true);
 		}
 		else {
 			/*
@@ -93,6 +99,7 @@ FridayGameJam.GameObjects.Ball.prototype.collidePlayers = function(player1, play
 			this.velocity.z = -Math.abs(this.velocity.z * this.restitution);
 			this.acceleration.x = player2.paddle.velocity.x * this.curviness;
 			this.acceleration.y = player2.paddle.velocity.y * this.curviness;
+			this.animation.play('pulse', true);
 		}
 		else {
 			/*
