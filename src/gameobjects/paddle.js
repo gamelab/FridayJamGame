@@ -33,8 +33,21 @@ FridayGameJam.GameObjects.Paddle.prototype.update = function() {
 		var lastX = this.x;
 		var lastY = this.y;
 		// Compute new position
-		this.x = this._followPoint.x - this.box.bounds.width * 0.5;
-		this.y = this._followPoint.y - this.box.bounds.height * 0.5;
+		this.x = this._followPoint.x - this.box.rawBounds.width * 0.5;
+		this.y = this._followPoint.y - this.box.rawBounds.height * 0.5;
+		// Compute bounds
+		if(this.x < this.state.level.gameArea.left) {
+			this.x = this.state.level.gameArea.left;
+		}
+		else if(this.state.level.gameArea.right - this.box.rawBounds.width < this.x) {
+			this.x = this.state.level.gameArea.right - this.box.rawBounds.width;
+		}
+		if(this.y < this.state.level.gameArea.top) {
+			this.y = this.state.level.gameArea.top;
+		}
+		else if(this.state.level.gameArea.bottom - this.box.rawBounds.height < this.y) {
+			this.y = this.state.level.gameArea.bottom - this.box.rawBounds.height;
+		}
 		// Compute velocity
 		this.velocity.setTo( this.x - lastX, this.y - lastY );
 	}

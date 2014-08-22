@@ -13,9 +13,10 @@ FridayGameJam.GameObjects.Ball = function(state, texture, x, y, z, level) {
 	this.radius = 23;
 	this.velocity = { x: 0, y: 0, z: 0 };
 	this.acceleration = { x: 0, y: 0 };
+	this.accelerationRetention = 0.99;
 	this.frictionRestitution = { x: 1, y: 1, power: 2 };
 	this.restitution = 1.0;	// Bounciness
-	this.curviness = 0.1;
+	this.curviness = 0.05;
 }
 
 Kiwi.extend( FridayGameJam.GameObjects.Ball, Kiwi.GameObjects.Sprite );
@@ -35,6 +36,10 @@ FridayGameJam.GameObjects.Ball.prototype.run = function( player1, player2 ) {
 
 	// Test for edge collision
 	this.collideEdges();
+
+	// Reduce curve
+	this.acceleration.x *= this.accelerationRetention;
+	this.acceleration.y *= this.accelerationRetention;
 
 	// Test for paddle collision and victory conditions
 	this.collidePlayers( player1, player2 );

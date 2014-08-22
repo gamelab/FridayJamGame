@@ -13,6 +13,8 @@ FridayGameJam.Play.create = function() {
     this.addChild( this.level );
 
     this.ballGroup = new Kiwi.Group( this );
+    this.ballGroup.anchorPointX = this.game.stage.width / 2;
+    this.ballGroup.anchorPointY = this.game.stage.height / 2;
     this.depthRect = new Kiwi.GameObjects.StaticImage(this, this.textures["depth-rect"], this.level.gameArea.left, this.level.gameArea.top );
     this.ball = new FridayGameJam.GameObjects.Ball( this, this.textures.ball, this.game.stage.width / 2 - 23, this.game.stage.height / 2 - 23, this.level.gameDepth.front + (this.level.gameDepth.back - this.level.gameDepth.front) / 2, this.level );
 
@@ -43,10 +45,7 @@ FridayGameJam.Play.update = function () {
 
 
   // Scaling group control
-  var scaleFactor = this.level.gameDepth.front / this.ball.z;
-  this.ballGroup.scale = scaleFactor;
-  this.ballGroup.x = (this.game.stage.width / 2) * (1 - scaleFactor);
-  this.ballGroup.y = (this.game.stage.height / 2) * (1 - scaleFactor);
+  this.ballGroup.scale = this.level.gameDepth.front / this.ball.z;
 }
 
 
