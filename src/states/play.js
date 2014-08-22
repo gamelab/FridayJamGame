@@ -39,6 +39,9 @@ FridayGameJam.Play.playerGameover = function() {
   //Stop the player
   this.player.stopFollowingMouse();
 
+  // Stop the ball
+  this.ball.stop();
+
   //GameOver Man, Gameover
   this.gameoverTitle = new Kiwi.GameObjects.StaticImage(this, this.textures['gameover'], 0, 2);
   this.gameoverTitle.x = this.game.stage.width * 0.5 - this.gameoverTitle.width * 0.5;

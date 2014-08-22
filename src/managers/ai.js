@@ -18,8 +18,15 @@ FridayGameJam.Managers.AI = function(state, level) {
 }
 
 FridayGameJam.Managers.AI.prototype.run = function() {
-	// Follow state ball position
-	this.aiPos.setTo( this.state.ball.x + this.state.ball.margin + this.state.ball.radius, this.state.ball.y + this.state.ball.margin + this.state.ball.radius );
+
+	if(this.state.ball.inPlay) {
+		var dx = (this.state.ball.x + this.state.ball.margin + this.state.ball.radius) - (this.paddle.x + this.paddle.width / 2);
+		var dy = (this.state.ball.y + this.state.ball.margin + this.state.ball.radius) - (this.paddle.y + this.paddle.height / 2);
+		var vectorLength = Math.sqrt(dx * dx + dy * dy) / (1 + this.level * 0.3);
+		dx /= vectorLength;
+		dy /= vectorLength;
+		this.aiPos.setTo( this.aiPos.x + dx, this.aiPos.y + dy);
+	}
 }
 
 FridayGameJam.Managers.AI.prototype.increaseDifficulty = function() {
@@ -28,6 +35,15 @@ FridayGameJam.Managers.AI.prototype.increaseDifficulty = function() {
 
 FridayGameJam.Managers.AI.prototype.restart = function() {
 	this.lives = 3;
+}
+
+FridayGameJam.Managers.AI.prototype.loseLife = function() {
+	this.lives--;
+
+	if(this.lives < 0) {
+		this.increaseDifficulty();
+		this.restart();
+	}
 }
 
 

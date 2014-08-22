@@ -11,7 +11,7 @@ FridayGameJam.GameObjects.Ball = function(state, texture, x, y, z, level) {
 	// Init depth value to manage fake 3D
 	this.z = z;
 
-	//this.radius = 23;
+	// Physics
 	this.radius = 36;
 	this.margin = 23;
 	this.velocity = { x: 0, y: 0, z: 0 };
@@ -20,6 +20,33 @@ FridayGameJam.GameObjects.Ball = function(state, texture, x, y, z, level) {
 	this.frictionRestitution = { x: 1, y: 1, power: 2 };
 	this.restitution = 1.0;	// Bounciness
 	this.curviness = 0.03;
+
+	this.box.hitbox = new Kiwi.Geom.Rectangle( this.margin, this.margin, this.radius * 2, this.radius * 2 );
+
+	// Ball modes
+	this.inPlay = false;
+	this.inNet = false;
+	this.countdownMax = 60;	// Frames
+	this.countdown = this.countdownMax;
+
+	this.newRound();
+
+    // Launcher
+    var self = this;
+	var attemptLaunch = function() {
+		// Attempts to launch the ball
+		if( !self.inPlay  &&  !self.inNet ) {
+			if( self.box.rawHitbox.intersects( self.state.player.paddle.box.rawBounds) ) {
+				self.velocity.z = 2 + self.state.ai.level * 0.1;
+				self.inPlay = true;
+				self.acceleration.x = self.state.player.paddle.velocity.x * self.curviness;
+				self.acceleration.y = self.state.player.paddle.velocity.y * self.curviness;
+				self.flare();
+			}
+		}
+	}
+
+    state.game.input.onUp.add( attemptLaunch, state );
 }
 
 Kiwi.extend( FridayGameJam.GameObjects.Ball, Kiwi.GameObjects.Sprite );
@@ -46,26 +73,36 @@ FridayGameJam.GameObjects.Ball.prototype.addProps = function( state ) {
 
 
 FridayGameJam.GameObjects.Ball.prototype.run = function( player1, player2 ) {
-	// Main ball physics schedule
-	// Requires knowledge of player and ai paddle positions
 
-	// Acceleration and velocity
-	this.velocity.x += this.acceleration.x * this.state.game.time.rate;
-	this.velocity.y += this.acceleration.y * this.state.game.time.rate;
-	// this.velocity.z stays the same
-	this.x += this.velocity.x * this.state.game.time.rate;
-	this.y += this.velocity.y * this.state.game.time.rate;
-	this.z += this.velocity.z * this.state.game.time.rate;
+	if(this.inPlay) {
+		// Main ball physics schedule
+		// Requires knowledge of player and ai paddle positions
 
-	// Test for edge collision
-	this.collideEdges();
+		// Acceleration and velocity
+		this.velocity.x += this.acceleration.x * this.state.game.time.rate;
+		this.velocity.y += this.acceleration.y * this.state.game.time.rate;
+		// this.velocity.z stays the same
+		this.x += this.velocity.x * this.state.game.time.rate;
+		this.y += this.velocity.y * this.state.game.time.rate;
+		this.z += this.velocity.z * this.state.game.time.rate;
 
-	// Reduce curve
-	this.acceleration.x *= this.accelerationRetention;
-	this.acceleration.y *= this.accelerationRetention;
+		// Test for edge collision
+		this.collideEdges();
 
-	// Test for paddle collision and victory conditions
-	this.collidePlayers( player1, player2 );
+		// Reduce curve
+		this.acceleration.x *= this.accelerationRetention;
+		this.acceleration.y *= this.accelerationRetention;
+
+		// Test for paddle collision and victory conditions
+		this.collidePlayers( player1, player2 );
+	}
+
+	if( this.inNet ) {
+		this.countdown -= this.game.time.rate;
+		if(this.countdown <= 0) {
+			this.newRound();
+		}
+	}
 
     // Scaling group control
     this.ballGroup.scale = this.state.level.gameDepth.front / this.z;
@@ -105,40 +142,29 @@ FridayGameJam.GameObjects.Ball.prototype.collidePlayers = function(player1, play
 	// Function for Z-depth bouncing
 
 	if( this.z <= this.level.gameDepth.front ) {
-		if( this.box.rawBounds.intersects( player1.paddle.box.rawBounds ) ) {
+		if( this.box.rawHitbox.intersects( player1.paddle.box.rawBounds ) ) {
 			this.velocity.z = Math.abs( this.velocity.z * this.restitution );
 			this.acceleration.x = player1.paddle.velocity.x * this.curviness;
 			this.acceleration.y = player1.paddle.velocity.y * this.curviness;
 			this.flare();
+			this.state.hud.increaseScore(100);
 		}
 		else {
-			/*
-			// Proper behaviour
-			this.stop();
-			console.log( "Nearside score!");
-			*/
-			// Showcase behaviour
-			this.velocity.z = Math.abs( this.velocity.z * this.restitution );
-			this.acceleration.x = player1.paddle.velocity.x * this.curviness;
-			this.acceleration.y = player1.paddle.velocity.y * this.curviness;
+			this.hitNet();
+			player1.loseLife();
 		}
 	}
 	else if( this.level.gameDepth.back <= this.z ) {
-		if( this.box.rawBounds.intersects( player2.paddle.box.rawBounds) ) {
+		if( this.box.rawHitbox.intersects( player2.paddle.box.rawBounds) ) {
 			this.velocity.z = -Math.abs(this.velocity.z * this.restitution);
 			this.acceleration.x = player2.paddle.velocity.x * this.curviness;
 			this.acceleration.y = player2.paddle.velocity.y * this.curviness;
 			this.flare();
 		}
 		else {
-			/*
-			// Proper behaviour
-			this.stop();
-			console.log("Farside score!");
-			*/
-			this.velocity.z = -Math.abs(this.velocity.z * this.restitution);
-			this.acceleration.x = player2.paddle.velocity.x * this.curviness;
-			this.acceleration.y = player2.paddle.velocity.y * this.curviness;
+			this.hitNet();
+			player2.loseLife();
+			this.state.hud.increaseScore(100);
 		}
 	}
 }
@@ -149,7 +175,23 @@ FridayGameJam.GameObjects.Ball.prototype.flare = function() {
 	this.state.level.flicker = 1;
 }
 
+
+
+FridayGameJam.GameObjects.Ball.prototype.newRound = function() {
+	this.inNet = false;
+	this.x = (this.state.game.stage.width - this.width) / 2;
+	this.y = (this.state.game.stage.height - this.height) / 2;
+	this.z = this.level.gameDepth.front;
+}
+
+FridayGameJam.GameObjects.Ball.prototype.hitNet = function() {
+	this.stop();
+	this.inNet = true;
+	this.countdown = this.countdownMax;
+}
+
 FridayGameJam.GameObjects.Ball.prototype.stop = function() {
+	this.inPlay = false;
 	this.velocity.x = 0;
 	this.velocity.y = 0;
 	this.velocity.z = 0;

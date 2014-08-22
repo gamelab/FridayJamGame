@@ -38,15 +38,15 @@ FridayGameJam.Intro.create = function () {
 	this.startButton.x = this.game.stage.width * 0.5 - this.startButton.width * 0.5;
 	this.startButton.y = 258;
 	this.addChild(this.startButton);
-
+	/*
 	this.highButton = new Kiwi.GameObjects.Sprite(this, this.textures['hi-score-button'], 0, 10);
 	this.highButton.x = this.game.stage.width * 0.5 - this.highButton.width * 0.5;
 	this.highButton.y = 297;
 	this.addChild(this.highButton);
-
+	*/
 
 	this.startButton.input.onUp.add( this.startGame, this );
-	this.highButton.input.onUp.add( this.hiScores, this );
+	//this.highButton.input.onUp.add( this.hiScores, this );
 
 }
 
