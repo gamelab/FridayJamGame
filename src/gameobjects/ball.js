@@ -25,6 +25,26 @@ FridayGameJam.GameObjects.Ball = function(state, texture, x, y, z, level) {
 Kiwi.extend( FridayGameJam.GameObjects.Ball, Kiwi.GameObjects.Sprite );
 
 
+FridayGameJam.GameObjects.Ball.prototype.addProps = function( state ) {
+	this.ballGroup = new Kiwi.Group( state );
+    this.ballGroup.anchorPointX = this.game.stage.width / 2;
+    this.ballGroup.anchorPointY = this.game.stage.height / 2;
+
+    this.depthRect = new Kiwi.GameObjects.StaticImage(state, state.textures["depth-rect"], state.level.gameArea.left, state.level.gameArea.top );
+    this.ballGroup.addChild( this.depthRect );
+
+	this.ballGroup.addChild( this );
+
+	// Create an additive ghost
+	this.glowBall = new Kiwi.GameObjects.Sprite( state, this.atlas, this.x, this.y );
+	this.ballGroup.addChild( this.glowBall );
+	this.glowBall.animation.add('pulse', [3,2,1,0], 0.1, false);
+	this.glowBall.glRenderer = this.state.game.renderer.requestSharedRenderer("AdditiveTAR");
+
+	state.addChild( this.ballGroup );
+}
+
+
 FridayGameJam.GameObjects.Ball.prototype.run = function( player1, player2 ) {
 	// Main ball physics schedule
 	// Requires knowledge of player and ai paddle positions
@@ -46,6 +66,13 @@ FridayGameJam.GameObjects.Ball.prototype.run = function( player1, player2 ) {
 
 	// Test for paddle collision and victory conditions
 	this.collidePlayers( player1, player2 );
+
+    // Scaling group control
+    this.ballGroup.scale = this.state.level.gameDepth.front / this.z;
+    // Props
+    this.glowBall.x = this.x;
+    this.glowBall.y = this.y;
+    this.glowBall.alpha = Math.sin(this.state.game.idealFrame * 0.07) * 0.1 + 0.3;
 }
 
 FridayGameJam.GameObjects.Ball.prototype.collideEdges = function() {
@@ -118,6 +145,7 @@ FridayGameJam.GameObjects.Ball.prototype.collidePlayers = function(player1, play
 
 FridayGameJam.GameObjects.Ball.prototype.flare = function() {
 	this.animation.play('pulse', true);
+	this.glowBall.animation.play('pulse', true);
 	this.state.level.flicker = 1;
 }
 
