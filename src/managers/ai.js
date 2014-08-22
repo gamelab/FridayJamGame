@@ -19,7 +19,7 @@ FridayGameJam.Managers.AI = function(state, level) {
 
 FridayGameJam.Managers.AI.prototype.run = function() {
 	// Follow state ball position
-	this.aiPos.setTo( this.state.ball.x, this.state.ball.y );
+	this.aiPos.setTo( this.state.ball.x + this.state.ball.margin + this.state.ball.radius, this.state.ball.y + this.state.ball.margin + this.state.ball.radius );
 }
 
 FridayGameJam.Managers.AI.prototype.increaseDifficulty = function() {

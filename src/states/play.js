@@ -9,9 +9,18 @@ FridayGameJam.Play.create = function() {
   	this.ai = new FridayGameJam.Managers.AI(this, 0);
  	  this.hud = new FridayGameJam.Managers.HUD(this, this.ai, this.player);
 
+    // Background
     this.level = new FridayGameJam.GameObjects.Level( this, this.textures.background, 0,0 );
     this.addChild( this.level );
+    // Create pulsar field
+    this.game.renderer.addSharedRendererClone( "TextureAtlasRenderer", "AdditiveTAR" );
+    this.additiveRenderer = this.game.renderer.requestSharedRenderer("AdditiveTAR");
+    this.additiveRenderer.blendMode.setMode("ADD");
+    this.levelPulse = new Kiwi.GameObjects.Sprite( this, this.textures.background, 0,0 );
+    this.levelPulse.glRenderer = this.additiveRenderer;
+    this.addChild(this.levelPulse);
 
+    // Ball and perspective
     this.ballGroup = new Kiwi.Group( this );
     this.ballGroup.anchorPointX = this.game.stage.width / 2;
     this.ballGroup.anchorPointY = this.game.stage.height / 2;
@@ -46,6 +55,10 @@ FridayGameJam.Play.update = function () {
 
   // Scaling group control
   this.ballGroup.scale = this.level.gameDepth.front / this.ball.z;
+
+  // Cosmetic animation
+  this.level.run();
+  this.levelPulse.alpha = this.level.glow;
 }
 
 

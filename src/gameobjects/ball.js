@@ -11,13 +11,15 @@ FridayGameJam.GameObjects.Ball = function(state, texture, x, y, z, level) {
 	// Init depth value to manage fake 3D
 	this.z = z;
 
-	this.radius = 23;
+	//this.radius = 23;
+	this.radius = 36;
+	this.margin = 23;
 	this.velocity = { x: 0, y: 0, z: 0 };
 	this.acceleration = { x: 0, y: 0 };
 	this.accelerationRetention = 0.99;
 	this.frictionRestitution = { x: 1, y: 1, power: 2 };
 	this.restitution = 1.0;	// Bounciness
-	this.curviness = 0.05;
+	this.curviness = 0.03;
 }
 
 Kiwi.extend( FridayGameJam.GameObjects.Ball, Kiwi.GameObjects.Sprite );
@@ -49,26 +51,26 @@ FridayGameJam.GameObjects.Ball.prototype.run = function( player1, player2 ) {
 FridayGameJam.GameObjects.Ball.prototype.collideEdges = function() {
 	// 2D edge collision, very simple
 
-	if( this.x <= this.level.gameArea.left ) {
-		this.x = this.level.gameArea.left;
+	if( this.x <= this.level.gameArea.left - this.margin ) {
+		this.x = this.level.gameArea.left - this.margin;
 		this.velocity.x = Math.abs(this.velocity.x * this.restitution);
-		this.animation.play('pulse', true);
+		this.flare();
 	}
-	else if( this.level.gameArea.right - this.radius * 2 <= this.x ) {
-		this.x = this.level.gameArea.right - this.radius * 2;
+	else if( this.level.gameArea.right - this.radius * 2 - this.margin <= this.x ) {
+		this.x = this.level.gameArea.right - this.radius * 2 - this.margin;
 		this.velocity.x = -Math.abs(this.velocity.x * this.restitution);
-		this.animation.play('pulse', true);
+		this.flare();
 	}
 
-	if( this.y <= this.level.gameArea.top ) {
-		this.y = this.level.gameArea.top;
+	if( this.y <= this.level.gameArea.top - this.margin ) {
+		this.y = this.level.gameArea.top - this.margin;
 		this.velocity.y = Math.abs(this.velocity.y * this.restitution);
-		this.animation.play('pulse', true);
+		this.flare();
 	}
-	else if( this.level.gameArea.bottom - this.radius * 2 <= this.y ) {
-		this.y = this.level.gameArea.bottom - this.radius * 2;
+	else if( this.level.gameArea.bottom - this.radius * 2 - this.margin <= this.y ) {
+		this.y = this.level.gameArea.bottom - this.radius * 2 - this.margin;
 		this.velocity.y = -Math.abs(this.velocity.y * this.restitution);
-		this.animation.play('pulse', true);
+		this.flare();
 	}
 }
 
@@ -80,7 +82,7 @@ FridayGameJam.GameObjects.Ball.prototype.collidePlayers = function(player1, play
 			this.velocity.z = Math.abs( this.velocity.z * this.restitution );
 			this.acceleration.x = player1.paddle.velocity.x * this.curviness;
 			this.acceleration.y = player1.paddle.velocity.y * this.curviness;
-			this.animation.play('pulse', true);
+			this.flare();
 		}
 		else {
 			/*
@@ -99,7 +101,7 @@ FridayGameJam.GameObjects.Ball.prototype.collidePlayers = function(player1, play
 			this.velocity.z = -Math.abs(this.velocity.z * this.restitution);
 			this.acceleration.x = player2.paddle.velocity.x * this.curviness;
 			this.acceleration.y = player2.paddle.velocity.y * this.curviness;
-			this.animation.play('pulse', true);
+			this.flare();
 		}
 		else {
 			/*
@@ -112,6 +114,11 @@ FridayGameJam.GameObjects.Ball.prototype.collidePlayers = function(player1, play
 			this.acceleration.y = player2.paddle.velocity.y * this.curviness;
 		}
 	}
+}
+
+FridayGameJam.GameObjects.Ball.prototype.flare = function() {
+	this.animation.play('pulse', true);
+	this.state.level.flicker = 1;
 }
 
 FridayGameJam.GameObjects.Ball.prototype.stop = function() {
