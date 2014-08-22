@@ -1,0 +1,44 @@
+
+@font-face { font-family: 'Orbitron'; src: url('assets/fonts/Orbitron-Regular.ttf'); }
+@font-face { font-family: 'Venus-Rising-RG'; src: url('assets/fonts/Venus-Rising-RG.ttf'); }
+@font-face { font-family: 'Yellowtail-Regular'; src: url('assets/fonts/Yellowtail-Regular.ttf'); }
+
+body, html {
+	background: #000;
+}
+
+#container {
+	width: 540px;
+	margin: 0 auto;
+	background: #000;
+	font-family: 'Orbitron', sans-serif;
+	color: #fff; 
+}
+
+#container p {
+	font-size: 13px;
+}
+
+#container h1 {
+	font-size: 2em;
+	margin-bottom: 0;
+	font-family: 'Venus-Rising-RG', 'Orbitron';
+	color: #000;
+	text-transform: uppercase;
+	text-shadow: 1px 0 3px #f96fa5, -1px 0 3px #f96fa5, 0 1px 3px #f96fa5, 0 -1px 3px #f96fa5;
+}
+
+#container a {
+	transition: all 0.5s;
+	color: #fff;
+	text-decoration: underline;
+}
+
+#container a:hover {
+	color: #000;
+	text-shadow: 1px 0 1px #f96fa5, -1px 0 1px #f96fa5, 0 1px 1px #f96fa5, 0 -1px 1px #f96fa5;
+}
+
+#content {
+
+} 
