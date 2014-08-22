@@ -14,19 +14,32 @@ FridayGameJam.Intro.create = function () {
 	this.background = new Kiwi.GameObjects.StaticImage(this, this.textures['background'], 0, 0);
 	this.addChild(this.background);
 
+	//HTML Remake
+	this.remake = new Kiwi.GameObjects.StaticImage(this, this.textures['html-remake'], 0, 0);
+	this.remake.x = this.game.stage.width * 0.5 - this.remake.width * 0.5;
+	this.remake.y = this.game.stage.height - this.remake.height - 10;
+	this.addChild(this.remake);
+
 	//GameTitle
-	this.gameTitle = new Kiwi.GameObjects.Textfield(this, 'Absolution velocity'.toUpperCase(), this.game.stage.width * 0.5, 80, '#fff', 40, 'bold');
-	this.gameTitle.textAlign = 'center';
+	this.gameTitle = new Kiwi.GameObjects.StaticImage(this, this.textures['title'], 0, 0);
+	this.gameTitle.x = (this.game.stage.width - this.gameTitle.width) * 0.5;
 	this.addChild(this.gameTitle);
 
+
 	//Buttons
-	this.button = new Kiwi.GameObjects.Sprite(this, this.textures['start-game-button'], 0, 0, true);
-	this.button.x = this.game.stage.width * 0.5 - this.button.width * 0.5;
-	this.button.y = this.game.stage.height * 0.5;
-	this.addChild(this.button);
+	this.startButton = new Kiwi.GameObjects.Sprite(this, this.textures['start-game-button'], 0, 10);
+	this.startButton.x = this.game.stage.width * 0.5 - this.startButton.width * 0.5;
+	this.startButton.y = 258;
+	this.addChild(this.startButton);
+
+	this.highButton = new Kiwi.GameObjects.Sprite(this, this.textures['hi-score-button'], 0, 10);
+	this.highButton.x = this.game.stage.width * 0.5 - this.highButton.width * 0.5;
+	this.highButton.y = 297;
+	this.addChild(this.highButton);
 
 
-	this.button.input.onUp.add( this.startGame, this );
+	this.startButton.input.onUp.add( this.startGame, this );
+	this.highButton.input.onUp.add( this.hiScores, this );
 
 }
 
@@ -34,5 +47,11 @@ FridayGameJam.Intro.startGame = function() {
 
 	this.game.stage.container.style.cursor = 'pointer';
 	this.game.states.switchState('Play', null, null, { level: 0 } );
+
+}
+
+FridayGameJam.Intro.hiScores = function() {
+
+	this.game.stage.container.style.cursor = 'pointer';
 
 }
