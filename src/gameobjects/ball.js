@@ -12,6 +12,8 @@ FridayGameJam.GameObjects.Ball = function(state, texture, x, y, z, level) {
 	this.z = z;
 
 	// Physics
+	this.baseVelocity = 2.3;
+	this.velocityIncrement = 0.1;
 	this.radius = 36;
 	this.margin = 23;
 	this.velocity = { x: 0, y: 0, z: 0 };
@@ -37,7 +39,7 @@ FridayGameJam.GameObjects.Ball = function(state, texture, x, y, z, level) {
 		// Attempts to launch the ball
 		if( !self.inPlay  &&  !self.inNet ) {
 			if( self.box.rawHitbox.intersects( self.state.player.paddle.box.rawBounds) ) {
-				self.velocity.z = 2 + self.state.ai.level * 0.1;
+				self.velocity.z = self.baseVelocity + self.state.ai.level * self.velocityIncrement;
 				self.inPlay = true;
 				self.acceleration.x = self.state.player.paddle.velocity.x * self.curviness;
 				self.acceleration.y = self.state.player.paddle.velocity.y * self.curviness;
@@ -147,7 +149,7 @@ FridayGameJam.GameObjects.Ball.prototype.collidePlayers = function(player1, play
 			this.acceleration.x = player1.paddle.velocity.x * this.curviness;
 			this.acceleration.y = player1.paddle.velocity.y * this.curviness;
 			this.flare();
-			this.state.hud.increaseScore(100);
+			this.state.hud.increaseScore(100 * player2.level);
 		}
 		else {
 			this.hitNet();
@@ -164,7 +166,7 @@ FridayGameJam.GameObjects.Ball.prototype.collidePlayers = function(player1, play
 		else {
 			this.hitNet();
 			player2.loseLife();
-			this.state.hud.increaseScore(100);
+			this.state.hud.increaseScore(100 * player2.level);
 		}
 	}
 }
@@ -197,4 +199,8 @@ FridayGameJam.GameObjects.Ball.prototype.stop = function() {
 	this.velocity.z = 0;
 	this.acceleration.x = 0;
 	this.acceleration.y = 0;
+}
+
+FridayGameJam.GameObjects.Ball.prototype.shutDown = function() {
+	this.state.game.input.onUp.removeAll();
 }

@@ -6,6 +6,8 @@ FridayGameJam.Managers.AI = function(state, level) {
 	this.game = this.state.game;
 
 	this.level = level;
+	this.difficultyOffset = 1.9;
+	this.difficultyIncrement = 0.3;
 	this.restart();
 
 	this.aiPos = new Kiwi.Geom.Point(this.game.stage.width / 2, this.game.stage.height / 2);
@@ -22,7 +24,7 @@ FridayGameJam.Managers.AI.prototype.run = function() {
 	if(this.state.ball.inPlay) {
 		var dx = (this.state.ball.x + this.state.ball.margin + this.state.ball.radius) - (this.paddle.x + this.paddle.width / 2);
 		var dy = (this.state.ball.y + this.state.ball.margin + this.state.ball.radius) - (this.paddle.y + this.paddle.height / 2);
-		var vectorLength = Math.sqrt(dx * dx + dy * dy) / (1 + this.level * 0.3);
+		var vectorLength = Math.sqrt(dx * dx + dy * dy) / (this.difficultyOffset + this.level * this.difficultyIncrement);
 		dx /= vectorLength;
 		dy /= vectorLength;
 		this.aiPos.setTo( this.aiPos.x + dx, this.aiPos.y + dy);
